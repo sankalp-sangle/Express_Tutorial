@@ -1,0 +1,24 @@
+{
+  "name": "express_tutorial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sankalp-sangle/Express_Tutorial.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sankalp-sangle/Express_Tutorial/issues"
+  },
+  "homepage": "https://github.com/sankalp-sangle/Express_Tutorial#readme",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "express": "^4.17.3"
+  }
+}
