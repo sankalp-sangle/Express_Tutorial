@@ -1,0 +1,18 @@
+
+Test Case 1  		<error>
+   Fname_Size :  Empty
+
+
+Test Case 2  		<error>
+   Lname_Size :  Empty
+
+
+Test Case 3  		<error>
+   email_Size :  Empty
+
+#Happy-case: creates a user
+Test Case 4  		(Key = 2.2.2.)
+   Fname_Size :  One or More than one
+   Lname_Size :  One or More than One
+   email_Size :  More than one
+

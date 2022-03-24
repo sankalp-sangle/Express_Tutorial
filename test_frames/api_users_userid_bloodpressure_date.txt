@@ -1,0 +1,28 @@
+# Checking the user ID
+  Size:
+        Empty.             [error][property empty]
+        One or more.       [property IDlengthOneOrMore]
+
+  ID:
+        -1.           [error]
+        0.            [single][if !empty]
+        1.            [if !empty]
+        LONG MAX.     [single][if IDlengthOneOrMore]
+
+  Presence of other special characters:
+        Empty.
+        Have special characters. [error]
+
+# Bloodpressure
+  BP number:
+	  Between 60 and 250.  
+        Greater than 250.             [error]
+        Less than 30.			  [error]
+	  
+
+# Checking the dateformat
+  Date size:
+        Empty.             [error]
+        Nine.		   
+
+

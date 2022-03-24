@@ -1,0 +1,12 @@
+# Checking the ID
+  ID_Size:
+      Empty.	     [error][property emptyid]
+      One or More than one. 
+  ID:
+      -1.   [error]
+       One or More than one. [if !emptyid]
+      MAX+1.[single][error]
+    
+  Presence of Special Characters:
+      None.     [if !emptyid]
+      Have special characters.   [error]

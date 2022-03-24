@@ -1,0 +1,15 @@
+# Firstname
+  Fname_Size:
+      Empty.	           [error]
+     One or More than one. 
+
+# Lastname
+  Lname_Size:
+      Empty.	     [error]
+      One or More than One.           
+     
+
+# email
+  email_Size:
+          Empty.     [error]
+      More than one. 

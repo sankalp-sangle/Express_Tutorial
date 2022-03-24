@@ -1,0 +1,22 @@
+#Blank Id throws error
+Test Case 1  		<error>
+   ID_Size :  Empty
+
+#Negative Id throws error
+Test Case 2  		<error>
+   ID :  -1
+
+#Id beyond Integer limit throws error
+Test Case 3  		<error>
+   ID :  MAX+1
+
+#Special characters throw errors
+Test Case 4  		<error>
+   Presence of Special Characters :  Have special characters
+
+#Happy_case: Required page is accessed through GET
+Test Case 5  		(Key = 2.2.1.)
+   ID_Size                        :  One or More than one
+   ID                             :  One or More than one
+   Presence of Special Characters :  None
+

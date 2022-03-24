@@ -1,0 +1,18 @@
+# Checking the ID
+
+  ID_Size:
+	Empty.		[error][property emptyid]
+	More than one.	
+
+  ID_Existence:
+      Does not Exist.	     [error][if !emptyid]
+      Exists. 			   [if !emptyid]
+
+#Checking nutrition field
+  Nutrition_food_input(in the body_input):
+	 Does not Exist.      [error][if !emptyid]
+		Exist.		[if !emptyid]
+    
+  Presence of Special Characters in Nutrition_input:
+      None.    
+      Have special characters.   [error]
