@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+require('dotenv').config({path: '../.env'});
 
 // Will use axios library to query APIs
 const axios = require('axios');
@@ -10,10 +11,11 @@ const axios = require('axios');
 const utils = require('../utils/utils');
 
 // These should be secure, but for now it's fine
-const APP_ID = 'c7ff3ef6';
-const APP_KEY = 'da8091859f40e7b8f08db56257996412';
+const APP_ID = process.env.APP_ID;
+const APP_KEY = process.env.APP_KEY;
+const API_URL = process.env.API_URL;
 
-const API_URL = 'https://api.edamam.com/api/nutrition-details';
+let Food = require('../models/food.model');
 
 // Handle POST /food/
 router.post('/', (req, res) => {
@@ -25,8 +27,20 @@ router.post('/', (req, res) => {
     // API needs a list of ingredients. Parse string into list
     request_body.ingr = utils.parseIngr(request_body.ingr);
 
+    const newFood = new Food({
+        username: request_body.username,
+        ingr: request_body.ingr.join(','),
+        calories: -1,
+        date: new Date()
+    });
+
     axios.post(API_URL + '?app_id=' + APP_ID + '&app_key=' + APP_KEY, request_body)
         .then(response => {
+            // If the response is successful, then save the food to the database
+            newFood.calories = response.data.calories;
+            newFood.save().
+            then(() => console.log('Food added!'))
+            .catch(err => console.log('Error: ' + err));
             res.send(response.data);
         }
         ).catch(error => {

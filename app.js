@@ -1,6 +1,11 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const mongoose = require('mongoose');
+
+// Load environment variables from .env file
+require('dotenv').config();
+
+const port = process.env.PORT || 4000;
 
 // This line is needed to allow parsing of HTTP body in json format
 app.use(express.json());
@@ -10,6 +15,14 @@ const football = require('./routes/football');
 const math = require('./routes/math');
 const search = require('./routes/search');
 const food = require('./routes/food');
+
+// Connect to MongoDB
+const uri = process.env.ATLAS_URI;
+mongoose.connect(uri);
+const connection = mongoose.connection;
+connection.once('open', () => {
+    console.log("MongoDB database connection established successfully");
+})
 
 // routes defined in football will handle all requests to the /football path
 app.use('/football', football);
