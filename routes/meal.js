@@ -28,10 +28,12 @@ router.post('/', (req, res) => {
     request_body.ingr = utils.parseIngr(request_body.ingr);
 
     const newMeal = new Meal({
-        username: request_body.username,
+        meal_id: request_body.meal_id,
+        meal_name: request_body.title,
+        time_of_day: request_body.time_of_day,
         ingr: request_body.ingr.join(','),
         calories: -1,
-        date: new Date()
+        date: new Date(),
     });
 
     axios.post(API_URL + '?app_id=' + APP_ID + '&app_key=' + APP_KEY, request_body)
