@@ -1,6 +1,6 @@
 // Args: ingr - comma separated string of ingredients
 // Returns: list of ingredients
-// Used in: routes/food.js
+// Used in: routes/meal.js
 function parseIngr(ingr) {
     let ingrList = ingr.split(',');
     let ingrList2 = [];

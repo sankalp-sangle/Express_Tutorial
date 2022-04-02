@@ -11,10 +11,8 @@ const port = process.env.PORT || 4000;
 app.use(express.json());
 
 // These are our routes
-const football = require('./routes/football');
 const math = require('./routes/math');
-const search = require('./routes/search');
-const food = require('./routes/food');
+const meal = require('./routes/meal');
 
 // Connect to MongoDB
 const uri = process.env.ATLAS_URI;
@@ -25,10 +23,8 @@ connection.once('open', () => {
 })
 
 // routes defined in football will handle all requests to the /football path
-app.use('/football', football);
 app.use('/math', math);
-app.use('/search', search);
-app.use('/food', food);
+app.use('/meal', meal);
 
 // Top level route
 app.get('/', function (req, res) {
