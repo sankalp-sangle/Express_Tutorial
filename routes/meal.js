@@ -1,4 +1,4 @@
-// food.js - Some of these routes query the Edamam API
+// meal.js - Some of these routes query the Edamam API
 
 const express = require('express');
 const router = express.Router();
@@ -15,31 +15,33 @@ const APP_ID = process.env.APP_ID;
 const APP_KEY = process.env.APP_KEY;
 const API_URL = process.env.API_URL;
 
-let Food = require('../models/food.model');
+let Meal = require('../models/meal.model');
 
-// Handle POST /food/
+// Handle POST /meal/
 router.post('/', (req, res) => {
     // Send a POST request to the API url with app_id and app_key as query parameters
     // and request_body as the body of the request
-    console.log("POST /food/");
+    console.log("POST /meal/");
     let request_body = req.body;
 
     // API needs a list of ingredients. Parse string into list
     request_body.ingr = utils.parseIngr(request_body.ingr);
 
-    const newFood = new Food({
-        username: request_body.username,
+    const newMeal = new Meal({
+        meal_id: request_body.meal_id,
+        meal_name: request_body.title,
+        time_of_day: request_body.time_of_day,
         ingr: request_body.ingr.join(','),
         calories: -1,
-        date: new Date()
+        date: new Date(),
     });
 
     axios.post(API_URL + '?app_id=' + APP_ID + '&app_key=' + APP_KEY, request_body)
         .then(response => {
-            // If the response is successful, then save the food to the database
-            newFood.calories = response.data.calories;
-            newFood.save().
-            then(() => console.log('Food added!'))
+            // If the response is successful, then save the meal to the database
+            newMeal.calories = response.data.calories;
+            newMeal.save().
+            then(() => console.log('Meal added!'))
             .catch(err => console.log('Error: ' + err));
             res.send(response.data);
         }
