@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 import { useNavigate, BrowserRouter, Link } from "react-router-dom";
 
@@ -12,10 +13,31 @@ function Signup() {
     const [password, setPassword] = useState("");
     const [passwordValidate, setPasswordValidate] = useState("");
 
-    function navigateLogin() {
+    function navigateLogin(event) {
+        event.preventDefault();
         console.log(email);
         console.log(password);
-        navigate("/login");
+        console.log("Received submit");
+
+        const request_body = {
+            "email_id": email,
+            "password": password
+        }
+
+        axios.post('/api/usersignup', request_body)
+            .then(response => {
+                console.log(response.data);
+                if(response.data.status) {
+                    alert("Signup Successful");
+                    navigate("/login");
+                }
+                else {
+                    alert("Signup Failed, possibly due to duplicate email");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     function validateForm() {

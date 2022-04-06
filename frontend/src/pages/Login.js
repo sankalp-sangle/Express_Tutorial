@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useNavigate, BrowserRouter, Link } from "react-router-dom";
 
+import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
@@ -11,10 +12,31 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    function navigateHome() {
+    function navigateHome(event) {
+        event.preventDefault();
         console.log(email);
         console.log(password);
-        navigate("/home");
+
+        const request_body = {
+            "email_id": email,
+            "password": password
+        }
+
+        axios.post('/api/userlogin', request_body)
+            .then(response => {
+                console.log(response.data);
+                if(response.data.status) {
+                    console.log(response.data.user_id)
+                    alert("Login Successful");
+                    navigate("/home");
+                }
+                else {
+                    alert("Login Failed, possibly due to incorrect email or password");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     function validateForm() {
