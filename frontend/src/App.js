@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Settings from "./pages/Settings";
 import Calendar from "./pages/Calendar";
 import Info from "./pages/Info";
+import Signup from "./pages/Signup";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from "react";
@@ -32,7 +33,7 @@ export default class App extends React.Component {
               <Route path="settings" element={<Settings />} />
               <Route path="calendar" element={<Calendar />} />
               <Route path="forgotpassword" element={<Login />} />
-              <Route path="signup" element={<Login />} />
+              <Route path="signup" element={<Signup />} />
               <Route path="moreinfo" element={<Info />} />
             </Routes>
           </div>
