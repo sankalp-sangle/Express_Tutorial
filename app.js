@@ -7,7 +7,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const port = process.env.PORT || 4000;
-
+//const port =3000;
 // This line is needed to allow parsing of HTTP body in json format
 app.use(express.json());
 
@@ -18,10 +18,12 @@ const math = require('./routes/math');
 const meal = require('./routes/meal');
 const signup = require('./routes/signup');
 const login = require('./routes/login');
+const exercise = require("./routes/exercise");
 
 // Connect to MongoDB
+//const uri = process.env.NIHAR_LOCALDB;
 const uri = process.env.ATLAS_URI;
-mongoose.connect(uri);
+mongoose.connect(uri,{ useNewUrlParser: true });
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
@@ -32,6 +34,7 @@ app.use('/api/math', math);
 app.use('/api/meal', meal);
 app.use('/api/usersignup', signup);
 app.use('/api/userlogin', login);
+app.use('/api/exercise',exercise);
 
 app.listen(port, function () {
   console.log(`App listening on port ${port}!`)

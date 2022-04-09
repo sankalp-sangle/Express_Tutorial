@@ -49,7 +49,52 @@ router.post('/', (req, res) => {
             console.log(error);
             res.send(error);
         }
-        );
+        ); 
 });
+
+//Handle GET /meal/   (returns all meals)
+router.get('/',async (req,res) => {
+    try{
+        const meals=await Meal.find();
+        res.json(meals);
+    }
+    catch{
+        res.json({message: err})
+    }
+    
+
+});
+
+//Handle DELETE /meal/ (Deletes a meal INPUT PROVIDED:meal_id)
+router.delete('/',async (req, res) => {
+    try{
+        const removedmeal= await Meal.remove( { meal_id : req.body.meal_id } );
+        res.json(removedmeal);
+    }
+    catch{
+        res.json({message: err})
+    }
+}); 
+
+//Handle PUT /meal/ (Updates a meal INPUT PROVIDED:meal_id and whatever needs to be updated) 
+router.put("/:id", (req, res, next) => {
+    let request_body = req.body;
+    request_body.ingr = utils.parseIngr(request_body.ingr);
+    return Meal.updateOne(
+      { meal_id: req.params.id },  // <-- find stage
+      { $set: {                // <-- set stage
+        meal_id: request_body.meal_id,
+        meal_name: request_body.title,
+        time_of_day: request_body.time_of_day,
+        ingr: request_body.ingr.join(','),
+        calories: -1,
+        date: new Date(),
+        } 
+      }   
+    ).then(result => {
+      res.status(200).json({ message: "Update successful!" });
+    });
+  });
+
 
 module.exports = router;
