@@ -9,6 +9,7 @@ import Info from "./pages/Info";
 import Signup from "./pages/Signup";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import React from "react";
 
 export default class App extends React.Component {

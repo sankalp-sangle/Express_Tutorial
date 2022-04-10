@@ -32,10 +32,12 @@ function Login() {
                 }
                 else {
                     alert("Login Failed, possibly due to incorrect email or password");
+                    navigate("/home");
                 }
             })
             .catch(error => {
                 console.log(error);
+                navigate("/home");
             });
     }
 
