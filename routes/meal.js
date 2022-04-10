@@ -51,8 +51,8 @@ router.post('/', (req, res) => {
                 res.json(data);
             })
             .catch(err => console.log('Error: ' + err));
-        }
-        ).catch(error => {
+        })
+        .catch(error => {
             console.log(error);
             res.send(error);
         }
