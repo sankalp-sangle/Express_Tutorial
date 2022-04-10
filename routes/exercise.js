@@ -23,20 +23,20 @@ router.post('/', (req, res) => {
 
 
     const exercise = new Exercise({
-        exercise_id: request_body.exercise_id,
-        exercise_name: request_body.title,
+        exercise_name: request_body.exercise_name,
         duration: request_body.duration,
         date: new Date(),
+        user_id: request_body.user_id
     });
 
-        exercise.save()
-        .then(data => {
-            res.json(data);
-        })
-        .catch(err=> {
-            console.log(err);
-            res.send(err);
-        })
+    exercise.save()
+    .then(data => {
+        res.json(data);
+    })
+    .catch(err=> {
+        console.log(err);
+        res.send(err);
+    })
 
 });
 
