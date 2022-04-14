@@ -20,6 +20,7 @@ const signup = require('./routes/signup');
 const login = require('./routes/login');
 const exercise = require("./routes/exercise");
 const bloodPressure= require("./routes/bp")
+const appointment=require("./routes/appointment")
 // Connect to MongoDB
 //const uri = process.env.NIHAR_LOCALDB;
 const uri = process.env.ATLAS_URI;
@@ -36,6 +37,7 @@ app.use('/api/usersignup', signup);
 app.use('/api/userlogin', login);
 app.use('/api/exercise',exercise);
 app.use('/api/bp',bloodPressure);
+app.use('/api/app',appointment);
 app.listen(port, function () {
   console.log(`App listening on port ${port}!`)
 });
