@@ -3,10 +3,29 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import rootReducer from './store/reducer';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk'
+
+const AppWrapper = () => {
+  /*const store = createStore(() => ({
+    isUserAuthenticated: false,
+    id: 0
+  }));*/
+  let store = createStore(rootReducer, applyMiddleware(thunk))
+
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
+}
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AppWrapper />
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { useNavigate, BrowserRouter, Link } from "react-router-dom";
+import { useNavigate, BrowserRouter, Link} from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
@@ -32,10 +33,12 @@ function Login() {
                 }
                 else {
                     alert("Login Failed, possibly due to incorrect email or password");
+                    navigate("/home");
                 }
             })
             .catch(error => {
                 console.log(error);
+                navigate("/home");
             });
     }
 
@@ -58,7 +61,7 @@ function Login() {
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
+                        We'll never share your email with anyone else.
                     </Form.Text>
                 </Form.Group>
 

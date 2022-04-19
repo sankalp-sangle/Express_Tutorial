@@ -1,9 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Navigationbar from './Navigationbar';
 
 import HomeGrid from './home_components/HomeGrid';
+import ExerciseGrid from './home_components/ExerciseGrid';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Home () {
+    //const user_id = useSelector(state => state.id);
+    //const dispatch = useDispatch();
+    //console.log(user_id);
+
     return (
     <div>
         <Navigationbar />
@@ -17,7 +23,7 @@ function Home () {
                     border: '2px solid red',
                 }}
             >
-                <h1>Graph</h1>
+                <h1>Blood Pressure</h1>
             </div>
             <div className="rectangle" 
                 style = {{
@@ -33,13 +39,13 @@ function Home () {
         </div>
 
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent:'center', alignItems:'center' }}>
-            <HomeGrid />
-            <HomeGrid />
+            <HomeGrid name={"Breakfast"}/>
+            <HomeGrid name={"Lunch"}/>
         </div>
 
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent:'center', alignItems:'center' }}>
-            <HomeGrid />
-            <HomeGrid />
+            <HomeGrid name={"Dinner"}/>
+            <ExerciseGrid />
         </div>
     </div>
     );

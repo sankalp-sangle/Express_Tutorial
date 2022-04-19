@@ -5,16 +5,18 @@ class FoodItem extends React.Component {
         super(props)
         
         this.state = {
-            food_id: 0,
-            quantity: 0,
-            
+            name: ""
         };
     }
 
     render () {
         return (
             <div>
-                <h1>FoodItem Test</h1>
+                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'space-between'}}>
+                    <h1>{this.props.item.name}</h1>
+                    <h1>{this.props.item.calories}</h1>
+                </div>
+                <p>{this.props.item.ingredients}</p>
             </div>
             );
     }
