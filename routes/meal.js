@@ -28,24 +28,31 @@ router.post('/', (req, res) => {
     request_body.ingr = utils.parseIngr(request_body.ingr);
 
     const newMeal = new Meal({
-        meal_id: request_body.meal_id,
         meal_name: request_body.title,
-        time_of_day: request_body.time_of_day,
-        ingr: request_body.ingr.join(','),
         calories: -1,
+        time_of_day: request_body.time_of_day,
         date: new Date(),
+        ingr: request_body.ingr.join(','),
+        user_id: request_body.user_id
     });
 
-    axios.post(API_URL + '?app_id=' + APP_ID + '&app_key=' + APP_KEY, request_body)
+    const edamam_request_body = {
+        "title": request_body.meal_name,
+        "ingr": request_body.ingr
+    };
+
+    axios.post(API_URL + '?app_id=' + APP_ID + '&app_key=' + APP_KEY, edamam_request_body)
         .then(response => {
             // If the response is successful, then save the meal to the database
             newMeal.calories = response.data.calories;
             newMeal.save().
-            then(() => console.log('Meal added!'))
+            then((data) => {
+                console.log('Meal added!');
+                res.json(data);
+            })
             .catch(err => console.log('Error: ' + err));
-            res.send(response.data);
-        }
-        ).catch(error => {
+        })
+        .catch(error => {
             console.log(error);
             res.send(error);
         }

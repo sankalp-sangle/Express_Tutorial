@@ -1,0 +1,56 @@
+{
+    "title": "second Post",
+    "description": "Test post"
+}
+
+    {
+        "meal_id": 1,
+        "meal_name": "Amlet",
+        "calories": 10,
+        "time_of_day": "DWadawd",
+        "date":"2015-03-25",
+        "ingr":"2 apples , 2 eggs"
+    }
+
+
+{
+        "meal_id": 1,
+        "title": "Amlet",
+        "time_of_day": "DWadawd",
+        "date":"2015-03-25",
+        "ingr":"2 apples , 2 eggs"
+}
+
+
+
+const exerciseSchema = new Schema({
+    exercise_id: { type: Number, required: true, unique: true },
+    exercise_name: { type: String, required: true, trim: true },
+    calories: { type: Number, required: true, trim: true },
+    duration: { type: Number, required: true, trim: true },
+    date: { type: Date, required: true },
+    user_id: { type: Schema.Types.ObjectId, ref: 'User' }
+}, {
+    timestamps: true,
+});
+
+
+{
+        "exercise_id": 1,
+        "title": "Cardio",
+        "duration": 45
+}
+
+
+{
+"systolic":80,
+"diastolic":120,
+"time_of_day": "Some time",
+"user_id":"6250e24c8bfb1367b47c291c"
+}
+
+
+
+{
+"bloodpressure_id":62536be0feefd8681a90d578
+}

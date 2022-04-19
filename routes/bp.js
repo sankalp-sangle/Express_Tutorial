@@ -10,26 +10,27 @@ const axios = require('axios');
 // Utils will have whatever helper functions we need
 const utils = require('../utils/utils');
 
-const APP_ID = process.env.APP_ID;
-const APP_KEY = process.env.APP_KEY;
-const API_URL = process.env.API_URL;
+//const APP_ID = process.env.APP_ID;
+//const APP_KEY = process.env.APP_KEY;
+//const API_URL = process.env.API_URL;
 
-let Exercise = require('../models/exercise.model');
+let bloodPressure = require('../models/bloodpressure.model');
 
-// Handle POST /exercise/
+// Handle POST /bp/
 router.post('/', (req, res) => {
-    console.log("POST /exercise/");
+    console.log("POST /bp/");
     let request_body = req.body;
 
 
-    const exercise = new Exercise({
-        exercise_name: request_body.exercise_name,
-        duration: request_body.duration,
+    const bloodpressure = new bloodPressure({
+        systolic: request_body.systolic,
+        diastolic: request_body.diastolic,
+        time_of_day: request_body.time_of_day,
         date: new Date(),
         user_id: request_body.user_id
     });
 
-    exercise.save()
+    bloodpressure.save()
     .then(data => {
         res.json(data);
     })
@@ -40,11 +41,11 @@ router.post('/', (req, res) => {
 
 });
 
-//Handle GET /exercise/   (returns all exercise)
+//Handle GET /bp/   (returns all bp records)
 router.get('/',async (req,res) => {
     try{
-        const allexercise=await Exercise.find();
-        res.json(allexercise);
+        const allbp=await bloodPressure.find();
+        res.json(allbp);
     }
     catch{
         res.json({message: err})
@@ -53,26 +54,25 @@ router.get('/',async (req,res) => {
 
 });
 
-//Handle DELETE /exercise/ (Deletes a exercise INPUT PROVIDED:exercise_id)
+//Handle DELETE /bp/ (Deletes a bp record INPUT PROVIDED:bp_id)
 router.delete('/',async (req, res) => {
     try{
-        const removedexercise= await Exercise.remove( { exercise_id : req.body.exercise_id } );
-        res.json(removedexercise);
+        const removedbp= await bloodPressure.remove( { bloodpressure_id : req.body.bloodpressure_id } );
+        res.json(removedbp);
     }
     catch{
         res.json({message: err})
     }
 }); 
 
-//Handle PUT /exercise/ (Updates a exercise INPUT PROVIDED:exercise_id and whatever needs to be updated) 
+//Handle PUT /bp/ (Updates a bp record INPUT PROVIDED:bp_id and whatever needs to be updated) 
 router.put("/:id", (req, res, next) => {
     let request_body = req.body;
-    return Exercise.updateOne(
-      { exercise_id: req.params.id },  // <-- find stage
+    return bloodPressure.updateOne(
+      { bloodpressure_id: req.params.id },  // <-- find stage
       { $set: {                // <-- set stage
-        exercise_id: request_body.exercise_id,
-        exercise_name: request_body.title,
-        duration: request_body.duration,
+        systolic: request_body.systolic,
+        diastolic: request_body.diastolic,
         } 
       }   
     ).then(result => {
