@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 import { useNavigate, BrowserRouter, Link} from "react-router-dom";
-import { useSelector } from 'react-redux';
 
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
@@ -29,16 +28,17 @@ function Login() {
                 if(response.data.status) {
                     console.log(response.data.user_id)
                     alert("Login Successful");
-                    navigate("/home");
+                    navigate("/home", {state:{id:response.data.user_id}});
                 }
                 else {
                     alert("Login Failed, possibly due to incorrect email or password");
-                    navigate("/home");
+                    navigate("/home", {state:{id:1}});
                 }
             })
             .catch(error => {
                 console.log(error);
-                navigate("/home");
+                console.log("hit");
+                navigate("/home", {state:{id:1}});
             });
     }
 
@@ -61,7 +61,7 @@ function Login() {
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
+                    We'll never share your email with anyone else.
                     </Form.Text>
                 </Form.Group>
 

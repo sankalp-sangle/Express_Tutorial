@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Navigationbar from './Navigationbar';
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
@@ -8,48 +8,118 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import actionCreators from '../store/actions'
 import { getHashValues } from '../store/utils'
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom'
 
-class Calendar extends React.Component {
-    constructor(props) {
-        super(props);
-        
-        this.state = {
-            list_of_events : [
-                {
-                    title: "Test Title",
-                    location: "Test Location",
-                    start_time: "2022-04-27",
-                    end_time: "2022-04-28"
-                },
-                {
-                    title: "Test Title 2",
-                    location: "Test Location 2",
-                    start_time: "2022-04-14",
-                    end_time: "2022-04-15"
-                }
-            ],
-            events : [
-                {
-                    title: "Test Title",
-                    date: "2022-04-27"
-                },
-                {
-                    title: "Test Title 2",
-                    date: "2022-04-14"
-                }
-            ]
+function Calendar(props) {
+    const user_id = useLocation().state.id;
+    const dispatch = useDispatch();
+    console.log(user_id);
+      const [events, setEvents] = useState([
+        {
+            title: "Test Title",
+            date: "2022-04-27"
+        },
+        {
+            title: "Test Title 2",
+            date: "2022-04-14"
         }
-    }
+    ]);
 
-    componentDidMount() {
+     const renderSidebar = () => {
+        return (
+          <div className='demo-app-sidebar'>
+            <div className='demo-app-sidebar-section'>
+              <h2>Instructions</h2>
+              <ul>
+                <li>Select dates and you will be prompted to create a new event</li>
+                <li>Drag, drop, and resize events</li>
+                <li>Click an event to delete it</li>
+              </ul>
+            </div>
+            <div className='demo-app-sidebar-section'>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={props.weekendsVisible}
+                  onChange={props.toggleWeekends}
+                ></input>
+                toggle weekends
+              </label>
+            </div>
+            <div className='demo-app-sidebar-section'>
+              <h2>All Events ({props.events.length})</h2>
+              <ul>
+                {props.events.map(renderSidebarEvent)}
+              </ul>
+            </div>
+          </div>
+        )
+      }
+    
+      // handlers for user actions
+      // ------------------------------------------------------------------------------------------
+    
+      const handleDateSelect = (selectInfo) => {
+        let calendarApi = selectInfo.view.calendar
+        let title = prompt('Please enter a new title for your event')
+    
+        calendarApi.unselect() // clear date selection
+        console.log("Start time: " + selectInfo.startStr);
+        console.log("End time: " + selectInfo.endStr);
+        if (title) {
+          calendarApi.addEvent({ // will render immediately. will call handleEventAdd
+            title,
+            start: selectInfo.startStr,
+            end: selectInfo.endStr,
+            allDay: selectInfo.allDay
+          }, true) // temporary=true, will get overwritten when reducer gives new events
+        }
+      }
+    
+      const handleEventClick = (clickInfo) => {
+        if (window.confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+          clickInfo.event.remove() // will render immediately. will call handleEventRemove
+        }
+      }
+    
+      // handlers that initiate reads/writes via the 'action' props
+      // ------------------------------------------------------------------------------------------
+    
+      const handleDates = (rangeInfo) => {
+        console.log(rangeInfo);
+        props.requestEvents(rangeInfo.startStr, rangeInfo.endStr)
+          .catch(reportNetworkError)
+      }
+    
+      const handleEventAdd = (addInfo) => {
+        props.createEvent(addInfo.event.toPlainObject())
+          .catch(() => {
+            reportNetworkError()
+            addInfo.revert()
+          })
+      }
+    
+      const handleEventChange = (changeInfo) => {
+        props.updateEvent(changeInfo.event.toPlainObject())
+          .catch(() => {
+            reportNetworkError()
+            changeInfo.revert()
+          })
+      }
+    
+      const handleEventRemove = (removeInfo) => {
+        props.deleteEvent(removeInfo.event.id)
+          .catch(() => {
+            reportNetworkError()
+            removeInfo.revert()
+          })
+      }
 
-    }
-
-  render() {
     return (
-      <div className='demo-app'>
-        <Navigationbar />
-        {this.renderSidebar()}
+      <div>
+        <Navigationbar id={user_id}/>
+        {renderSidebar()}
         <div className='demo-app-main'>
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -66,110 +136,19 @@ class Calendar extends React.Component {
             /* Uncomment this to trigger the problem
             hiddenDays={[ 0 ]}
             */
-            weekends={this.props.weekendsVisible}
-            datesSet={this.handleDates}
-            select={this.handleDateSelect}
-            events={this.state.events}
+            weekends={props.weekendsVisible}
+            datesSet={handleDates}
+            select={handleDateSelect}
+            events={events}
             eventContent={renderEventContent} // custom render function
-            eventClick={this.handleEventClick}
-            eventAdd={this.handleEventAdd}
-            eventChange={this.handleEventChange} // called for drag-n-drop/resize
-            eventRemove={this.handleEventRemove}
+            eventClick={handleEventClick}
+            eventAdd={handleEventAdd}
+            eventChange={handleEventChange} // called for drag-n-drop/resize
+            eventRemove={handleEventRemove}
           />
         </div>
       </div>
     )
-  }
-
-  renderSidebar() {
-    return (
-      <div className='demo-app-sidebar'>
-        <div className='demo-app-sidebar-section'>
-          <h2>Instructions</h2>
-          <ul>
-            <li>Select dates and you will be prompted to create a new event</li>
-            <li>Drag, drop, and resize events</li>
-            <li>Click an event to delete it</li>
-          </ul>
-        </div>
-        <div className='demo-app-sidebar-section'>
-          <label>
-            <input
-              type='checkbox'
-              checked={this.props.weekendsVisible}
-              onChange={this.props.toggleWeekends}
-            ></input>
-            toggle weekends
-          </label>
-        </div>
-        <div className='demo-app-sidebar-section'>
-          <h2>All Events ({this.props.events.length})</h2>
-          <ul>
-            {this.props.events.map(renderSidebarEvent)}
-          </ul>
-        </div>
-      </div>
-    )
-  }
-
-  // handlers for user actions
-  // ------------------------------------------------------------------------------------------
-
-  handleDateSelect = (selectInfo) => {
-    let calendarApi = selectInfo.view.calendar
-    let title = prompt('Please enter a new title for your event')
-
-    calendarApi.unselect() // clear date selection
-    console.log("Start time: " + selectInfo.startStr);
-    console.log("End time: " + selectInfo.endStr);
-    if (title) {
-      calendarApi.addEvent({ // will render immediately. will call handleEventAdd
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-      }, true) // temporary=true, will get overwritten when reducer gives new events
-    }
-  }
-
-  handleEventClick = (clickInfo) => {
-    if (window.confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove() // will render immediately. will call handleEventRemove
-    }
-  }
-
-  // handlers that initiate reads/writes via the 'action' props
-  // ------------------------------------------------------------------------------------------
-
-  handleDates = (rangeInfo) => {
-    console.log(rangeInfo);
-    this.props.requestEvents(rangeInfo.startStr, rangeInfo.endStr)
-      .catch(reportNetworkError)
-  }
-
-  handleEventAdd = (addInfo) => {
-    this.props.createEvent(addInfo.event.toPlainObject())
-      .catch(() => {
-        reportNetworkError()
-        addInfo.revert()
-      })
-  }
-
-  handleEventChange = (changeInfo) => {
-    this.props.updateEvent(changeInfo.event.toPlainObject())
-      .catch(() => {
-        reportNetworkError()
-        changeInfo.revert()
-      })
-  }
-
-  handleEventRemove = (removeInfo) => {
-    this.props.deleteEvent(removeInfo.event.id)
-      .catch(() => {
-        reportNetworkError()
-        removeInfo.revert()
-      })
-  }
 
 }
 

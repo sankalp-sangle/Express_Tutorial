@@ -23,7 +23,7 @@ const DELAY = 200
 let simulateErrors = false
 
 document.addEventListener('keypress', (ev) => {
-  if (ev.key === 'e') {
+  if (ev.key === 'ctrl+e') {
     alert('You pressed the key "e". Will begin to simulate errors.')
     simulateErrors = true
   }

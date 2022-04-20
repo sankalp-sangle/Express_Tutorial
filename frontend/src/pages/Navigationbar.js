@@ -4,9 +4,9 @@ import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Nav from 'react-bootstrap/Nav';
+import {NavLink} from 'react-router-dom';
 
-function Navigationbar({id}) {
-    console.log("Navigation: " + id);
+function Navigationbar(props) {
     return (
         <div>
             <Navbar bg="light" expand={false}>
@@ -23,11 +23,11 @@ function Navigationbar({id}) {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Nav className="justify-content-end flex-grow-1 pe-3">
-                    <Nav.Link href="/home">Home</Nav.Link>
-                    <Nav.Link href="/calendar">Calendar</Nav.Link>
-                    <Nav.Link href="/moreinfo">Info/FAQ</Nav.Link>
-                    <Nav.Link href="/settings">Settings</Nav.Link>
-                    <Nav.Link href="/login">Sign Out</Nav.Link>
+                    <NavLink to={{pathname:'/home'}} state={{id:props.id}}>Home</NavLink>
+                    <NavLink to={{pathname:'/calendar'}} state={{id:props.id}}>Calendar</NavLink>
+                    <NavLink to={{pathname:'/moreinfo'}} state={{id:props.id}}>Info/FAQ</NavLink>
+                    <NavLink to={{pathname:'/settings'}} state={{id:props.id}}>Settings</NavLink>
+                    <NavLink to={{pathname:'/login'}}>Sign Out</NavLink>
                     </Nav>
                 </Offcanvas.Body>
                 </Navbar.Offcanvas>
