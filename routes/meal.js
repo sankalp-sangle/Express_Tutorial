@@ -61,13 +61,29 @@ router.post('/', (req, res) => {
 
 //Handle GET /meal/   (returns all meals)
 router.get('/',async (req,res) => {
-    try{
-        const meals=await Meal.find();
+    console.log("GET /meal/");
+    
+    const request_body = req.body;
+    const filter_body = {}
+
+    if (request_body.user_id) {
+        filter_body.user_id = request_body.user_id;
+    }
+    if (request_body.date) {
+        filter_body.date = {
+            $gte: request_body.date + 'T00:00:00.000Z',
+            $lte: request_body.date + 'T23:59:59.999Z'
+        }
+    }
+
+    // Get all meals from the database that satisfy the query
+    Meal.find(filter_body, (err, meals) => {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
         res.json(meals);
-    }
-    catch{
-        res.json({message: err})
-    }
+    })
     
 
 });
