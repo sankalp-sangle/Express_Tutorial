@@ -42,13 +42,29 @@ router.post('/', (req, res) => {
 
 //Handle GET /exercise/   (returns all exercise)
 router.get('/',async (req,res) => {
-    try{
-        const allexercise=await Exercise.find();
-        res.json(allexercise);
+    console.log("GET /exercise/");
+    
+    const request_body = req.body;
+    const filter_body = {}
+
+    if (request_body.user_id) {
+        filter_body.user_id = request_body.user_id;
     }
-    catch{
-        res.json({message: err})
+    if (request_body.date) {
+        filter_body.date = {
+            $gte: request_body.date + 'T00:00:00.000Z',
+            $lte: request_body.date + 'T23:59:59.999Z'
+        }
     }
+
+    // Get all meals from the database that satisfy the query
+    Exercise.find(filter_body, (err, exercises) => {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
+        res.json(exercises);
+    })
     
 
 });

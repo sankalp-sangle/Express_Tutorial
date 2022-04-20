@@ -43,15 +43,29 @@ router.post('/', (req, res) => {
 
 //Handle GET /bp/   (returns all bp records)
 router.get('/',async (req,res) => {
-    try{
-        const allbp=await bloodPressure.find();
-        res.json(allbp);
-    }
-    catch{
-        res.json({message: err})
-    }
+    console.log("GET /bp/");
     
+    const request_body = req.body;
+    const filter_body = {}
 
+    if (request_body.user_id) {
+        filter_body.user_id = request_body.user_id;
+    }
+    if (request_body.date) {
+        filter_body.date = {
+            $gte: request_body.date + 'T00:00:00.000Z',
+            $lte: request_body.date + 'T23:59:59.999Z'
+        }
+    }
+
+    // Get all bp readings from the database that satisfy the query
+    bloodPressure.find(filter_body, (err, bps) => {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
+        res.json(bps);
+    })
 });
 
 //Handle DELETE /bp/ (Deletes a bp record INPUT PROVIDED:bp_id)
