@@ -71,5 +71,23 @@ router.get('/',async (req,res) => {
 });
 
 
+//Handle DELETE /app/ (Deletes a app INPUT PROVIDED:appt_id)
+router.delete('/',async (req, res) => {
+    console.log("DELETE /app/");
+    const request_body = req.body;
+    
+    // Delete the app from the database
+    appointment.deleteOne({_id: request_body.appt_id}, (err) => {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
+        res.json({
+            message: 'Appointment deleted!'
+        });
+    });
+
+}); 
+
 
 module.exports = router;

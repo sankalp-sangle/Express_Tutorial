@@ -70,13 +70,19 @@ router.get('/',async (req,res) => {
 
 //Handle DELETE /bp/ (Deletes a bp record INPUT PROVIDED:bp_id)
 router.delete('/',async (req, res) => {
-    try{
-        const removedbp= await bloodPressure.remove( { bloodpressure_id : req.body.bloodpressure_id } );
-        res.json(removedbp);
-    }
-    catch{
-        res.json({message: err})
-    }
+    console.log("DELETE /bp/");
+    const request_body = req.body;
+    
+    // Delete the meal from the database
+    bloodPressure.deleteOne({_id: request_body.bp_id}, (err) => {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
+        res.json({
+            message: 'BP deleted!'
+        });
+    });
 }); 
 
 //Handle PUT /bp/ (Updates a bp record INPUT PROVIDED:bp_id and whatever needs to be updated) 

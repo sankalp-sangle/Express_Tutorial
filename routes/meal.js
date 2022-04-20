@@ -90,13 +90,20 @@ router.get('/',async (req,res) => {
 
 //Handle DELETE /meal/ (Deletes a meal INPUT PROVIDED:meal_id)
 router.delete('/',async (req, res) => {
-    try{
-        const removedmeal= await Meal.remove( { meal_id : req.body.meal_id } );
-        res.json(removedmeal);
-    }
-    catch{
-        res.json({message: err})
-    }
+    console.log("DELETE /meal/");
+    const request_body = req.body;
+    
+    // Delete the meal from the database
+    Meal.deleteOne({_id: request_body.meal_id}, (err) => {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
+        res.json({
+            message: 'Meal deleted!'
+        });
+    });
+
 }); 
 
 //Handle PUT /meal/ (Updates a meal INPUT PROVIDED:meal_id and whatever needs to be updated) 

@@ -71,13 +71,19 @@ router.get('/',async (req,res) => {
 
 //Handle DELETE /exercise/ (Deletes a exercise INPUT PROVIDED:exercise_id)
 router.delete('/',async (req, res) => {
-    try{
-        const removedexercise= await Exercise.remove( { exercise_id : req.body.exercise_id } );
-        res.json(removedexercise);
-    }
-    catch{
-        res.json({message: err})
-    }
+    console.log("DELETE /exercise/");
+    const request_body = req.body;
+    
+    // Delete the meal from the database
+    Exercise.deleteOne({_id: request_body.exercise_id}, (err) => {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
+        res.json({
+            message: 'Exercise deleted!'
+        });
+    });
 }); 
 
 //Handle PUT /exercise/ (Updates a exercise INPUT PROVIDED:exercise_id and whatever needs to be updated) 
