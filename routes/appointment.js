@@ -29,10 +29,8 @@ router.post('/', (req, res) => {
 
     const App = new appointment({
         appt_name: request_body.appt_name,
-        location: request_body.location,
         date: new Date(),
         time:request_body.time,
-        notes:request_body.notes,
         user_id: request_body.user_id
     });
 
