@@ -1,4 +1,7 @@
 import React from 'react';
+
+import axios from 'axios';
+
 import FoodItem from './FoodItem';
 
 import Card from 'react-bootstrap/Card';
@@ -15,23 +18,9 @@ class HomeGrid extends React.Component {
 
         this.state = {
             time_of_day: this.props.name,
-            food_list: [
-                {
-                    id: "1",
-                    name: "food1",
-                    calories: 10,
-                    ingredients: "the souls of my enemies"
-                },
-                {
-                    id: "2",
-                    name: "food2",
-                    calories: 10,
-                    ingredients: "zebras"
-                }
-            ],
+            food_list: this.props.food_list,
             showPopup: false,
             food_name: "",
-            calories: "",
             ingredients: "",
         };
 
@@ -61,15 +50,6 @@ class HomeGrid extends React.Component {
                                 placeholder="Food Title" 
                                 value={this.state.food_name}
                                 onChange={(e) => this.setState({food_name: e.target.value})}
-                            />
-                        </Form.Group>
-
-                        <Form.Group controlId="formFoodName">
-                            <Form.Label>Calories</Form.Label>
-                            <Form.Control 
-                                placeholder="Number of calories" 
-                                value={this.state.calories}
-                                onChange={(e) => this.setState({calories: e.target.value})}
                             />
                         </Form.Group>
 
@@ -109,7 +89,7 @@ class HomeGrid extends React.Component {
                                 this.state.food_list.map((item) => {
                                     return (
                                         <ListGroup.Item>
-                                            <FoodItem key={item.id} item={item} />
+                                            <FoodItem key={item._id} item={item} />
                                             <Button variant="secondary" onClick={() => this._onRemoveClick(item.id)}>
                                                 Remove
                                             </Button>
@@ -125,43 +105,73 @@ class HomeGrid extends React.Component {
     }
 
     _onAddClick() {
-        //TODO: add item to backend and retrieve back calories and meal id
+        //TODO: add item to backend and retrieve back calories and meal id 
+        const request_body = {
+            "user_id": this.props.user_id,
+            "title": this.state.food_name,
+            "time_of_day": "morning",
+            "ingr": this.state.ingredients
+        }
 
-        //section gets new id
-        //replace this section with what is retrieved from the api
-        let len = this.state.food_list.length;
-        let new_id = (len == 0 ? 1 : parseInt(this.state.food_list[len-1].id) + 1)
-        console.log("This is on add" + new_id)
-        // end section here
-
-        //create new temp structure for food
-        let temp = [{
-            id: new_id+"",
-            name: this.state.food_name,
-            calories: this.state.calories,
-            ingredients: this.state.ingredients
-        }]
-
-        //Set items in component
-        this.setState({
-            food_list: this.state.food_list.concat(temp),
-            food_name: "",
-            calories: "",
-            ingredients: "",
-            showPopup: false
-        })
+        axios.post('http://localhost:4000/api/meal', request_body)
+            .then(response => {
+                console.log(response.data);
+                if(response.data) {
+                    let item = response.data;
+                    alert("Meal added!");
+                    //create new temp structure for food
+                    let temp = [{
+                        id: item._id,
+                        meal_name: item.meal_name,
+                        calories: item.calories,
+                        ingredients: item.ingr
+                    }]
+                    
+                    //Set items in component
+                    this.setState({
+                        food_list: this.state.food_list.concat(temp),
+                        food_name: "",
+                        ingredients: "",
+                        showPopup: false
+                    })
+                }
+                else {
+                    alert("Something went wrong with adding the meal");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+        });
     }
     
     _onRemoveClick(id) {
-        console.log(id);
+        console.log("Remove this food item" + id);
         //TODO: Also remove item from backend
+        const request_body = {meal_id: id};
 
         //Filter out list and remove item from current storage
-        let newList = this.state.food_list.filter((item) => item.id != id);
+        axios.delete('http://localhost:4000/api/meal', request_body)
+            .then(response => {
+                if(response.data) {
+                    let item = response.data;
+                    console.log(item)
+                    alert("Meal removed!");
 
-        //Set new state for list
-        this.setState({
-            food_list: newList
+                    let newList = this.state.food_list.filter((item) => item.id != id);
+
+                    //Set new state for list
+                    this.setState({
+                        food_list: newList
+                    });
+                    
+                    this.props.onChange(item.id);
+                }
+                else {
+                    alert("Something went wrong with removing");
+                }
+            })
+            .catch(error => {
+                console.log(error);
         });
     }
 

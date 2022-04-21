@@ -24,7 +24,7 @@ function Signup() {
             "password": password
         }
 
-        axios.post('/api/usersignup', request_body)
+        axios.post('http://localhost:4000/api/usersignup', request_body)
             .then(response => {
                 console.log(response.data);
                 if(response.data.status) {

@@ -13,10 +13,10 @@ class FoodItem extends React.Component {
         return (
             <div>
                 <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'space-between'}}>
-                    <h1>{this.props.item.name}</h1>
+                    <h1>{this.props.item.meal_name}</h1>
                     <h1>{this.props.item.calories}</h1>
                 </div>
-                <p>{this.props.item.ingredients}</p>
+                <p>{this.props.item.ingr}</p>
             </div>
             );
     }

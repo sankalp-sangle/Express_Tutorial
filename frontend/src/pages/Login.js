@@ -22,7 +22,7 @@ function Login() {
             "password": password
         }
 
-        axios.post('/api/userlogin', request_body)
+        axios.post('http://localhost:4000/api/userlogin', request_body)
             .then(response => {
                 console.log(response.data);
                 if(response.data.status) {
@@ -32,13 +32,10 @@ function Login() {
                 }
                 else {
                     alert("Login Failed, possibly due to incorrect email or password");
-                    navigate("/home", {state:{id:1}});
                 }
             })
             .catch(error => {
                 console.log(error);
-                console.log("hit");
-                navigate("/home", {state:{id:1}});
             });
     }
 
