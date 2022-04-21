@@ -150,7 +150,7 @@ class HomeGrid extends React.Component {
         const request_body = {meal_id: id};
 
         //Filter out list and remove item from current storage
-        axios.delete('http://localhost:4000/api/meal', request_body)
+        axios.delete('http://localhost:4000/api/meal', {data:request_body})
             .then(response => {
                 if(response.data) {
                     let item = response.data;
