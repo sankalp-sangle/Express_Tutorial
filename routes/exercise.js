@@ -44,16 +44,18 @@ router.post('/', (req, res) => {
 router.get('/',async (req,res) => {
     console.log("GET /exercise/");
     
-    const request_body = req.body;
+    let user_id = req.query.user_id;
+    let date = req.query.date;
+
     const filter_body = {}
 
-    if (request_body.user_id) {
-        filter_body.user_id = request_body.user_id;
+    if (user_id) {
+        filter_body.user_id = user_id;
     }
-    if (request_body.date) {
+    if (date) {
         filter_body.date = {
-            $gte: request_body.date + 'T00:00:00.000Z',
-            $lte: request_body.date + 'T23:59:59.999Z'
+            $gte: date + 'T00:00:00.000Z',
+            $lte: date + 'T23:59:59.999Z'
         }
     }
 

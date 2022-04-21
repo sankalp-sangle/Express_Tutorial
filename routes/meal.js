@@ -62,17 +62,22 @@ router.post('/', (req, res) => {
 //Handle GET /meal/   (returns all meals)
 router.get('/',async (req,res) => {
     console.log("GET /meal/");
+
+    // Get user_id from query parameters
+    let user_id = req.query.user_id;
+    // Get date from query parameters
+    let date = req.query.date;
     
-    const request_body = req.body;
+    // const request_body = req.body;
     const filter_body = {}
 
-    if (request_body.user_id) {
-        filter_body.user_id = request_body.user_id;
+    if (user_id) {
+        filter_body.user_id = user_id;
     }
-    if (request_body.date) {
+    if (date) {
         filter_body.date = {
-            $gte: request_body.date + 'T00:00:00.000Z',
-            $lte: request_body.date + 'T23:59:59.999Z'
+            $gte: date + 'T00:00:00.000Z',
+            $lte: date + 'T23:59:59.999Z'
         }
     }
 
