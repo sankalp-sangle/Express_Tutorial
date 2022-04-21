@@ -20,6 +20,8 @@ const utils = require('../utils/utils');
 //const API_URL = process.env.API_URL;
 
 let appointment = require('../models/appointment.model');
+let User = require('../models/user.model');
+const cron = require('node-cron');
 
 // Handle POST /app/
 router.post('/', (req, res) => {
@@ -29,7 +31,8 @@ router.post('/', (req, res) => {
 
     const App = new appointment({
         appt_name: request_body.appt_name,
-        date: new Date(),
+        date_of_booking: new Date(),
+        date_scheduled: request_body.date_scheduled,
         time:request_body.time,
         user_id: request_body.user_id
     });
@@ -37,18 +40,6 @@ router.post('/', (req, res) => {
     App.save()
     .then(data => {
         res.json(data);
-        //As of Now whenever you book an appointment a mail will be sent
-        //This is the message which we will be sending
-        const message={
-            to:" ",
-            from:" ",
-            subject:"hello",
-            text:"test",
-            html:'<h1>test</h1>',
-        };
-        //Sending the actual mail
-        sendmail.send(message)
-        .then(response=> console.log('Email sent...'));
     })
     .catch(err=> {
         console.log(err);
@@ -57,7 +48,7 @@ router.post('/', (req, res) => {
 
 });
 
-//Handle GET /app/   (returns all bp records)
+//Handle GET /app/   (returns all appointment records)
 router.get('/',async (req,res) => {
     try{
         const allapp=await appointment.find();
@@ -88,6 +79,55 @@ router.delete('/',async (req, res) => {
     });
 
 }); 
+
+cron.schedule('* * * * *', async function() {
+    console.log('Running every minute');
+    const allapp=await appointment.find();
+    const filter_body = {};
+
+    let yyyymmdd = new Date().toISOString().slice(0,10);
+
+    let start_time = yyyymmdd + 'T00:00:00.000Z';
+    let end_time = yyyymmdd + 'T23:59:59.999Z';
+
+    filter_body.date_scheduled = {
+        $gte: start_time,
+        $lte: end_time
+    }
+
+    console.log(filter_body);
+
+    // Get all appointments from database with filter_body
+    appointment.find(filter_body, (err, appointments) => {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
+        // For each appointment, retrieve the user_id.
+        appointments.forEach(async (appointment) => {
+            console.log("This appointment is scheduled today");
+            console.log(appointment);
+            const user_id = appointment.user_id;
+            // Retrieve the user from the database
+            const user = await User.findById(user_id);
+            // Retrieve the user's email
+            const email = user.email_id;
+            console.log(email);
+
+            // Send email to user
+            // const message={
+            //                 to:email,
+            //                 from:" ",
+            //                 subject:"You have an appointment!",
+            //                 text:appointment.name + " " + appointment.date_scheduled + " " + appointment.time,
+            //                 html:'<h1>test</h1>',
+            //             }
+            // //Sending the actual mail
+            // sendmail.send(message)
+            // .then(response=> console.log('Email sent...'));
+        });
+    });
+});
 
 
 module.exports = router;
