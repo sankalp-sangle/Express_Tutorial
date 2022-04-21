@@ -34,12 +34,12 @@ function Home () {
 
     const request_body = {
         "user_id": user_id,
-        "date": newDate.toString()
+        "date": new Date().toISOString().slice(0,10) // Date should be in YYYY-MM-DD format
     }
 
     let retrieveFoods = () => {
         console.log(request_body)
-        axios.get('http://localhost:4000/api/meal', request_body)
+        axios.get('http://localhost:4000/api/meal', {params:request_body})
         .then(response => {
             console.log(response.data);
             let f_list = response.data.map((item) => {
